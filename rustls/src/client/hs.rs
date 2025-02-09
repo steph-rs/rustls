@@ -98,6 +98,8 @@ pub(super) fn start_handshake(
     cx: &mut ClientContext<'_>,
 ) -> NextStateOrError {
     println!("start_handshake");
+    println!("start_handshake buffer");
+
     let mut transcript_buffer = HandshakeHashBuffer::new();
     println!("start_handshake 2");
 
