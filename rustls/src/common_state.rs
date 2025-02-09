@@ -19,7 +19,7 @@ use crate::vecbuf::ChunkVecBuffer;
 
 use alloc::boxed::Box;
 use alloc::vec::Vec;
-
+use std::println;
 use pki_types::CertificateDer;
 
 /// Connection state common to both client and server connections.
@@ -216,6 +216,7 @@ impl CommonState {
     /// Fragment `m`, encrypt the fragments, and then queue
     /// the encrypted fragments for sending.
     pub(crate) fn send_msg_encrypt(&mut self, m: PlainMessage) {
+        println!("CommonState::send_msg_encrypt");
         let iter = self
             .message_fragmenter
             .fragment_message(&m);
@@ -250,6 +251,7 @@ impl CommonState {
     }
 
     fn send_single_fragment(&mut self, m: BorrowedPlainMessage) {
+        println!("CommonState::send_single_fragment");
         // Close connection once we start to run out of
         // sequence space.
         if self
@@ -266,6 +268,8 @@ impl CommonState {
         }
 
         let em = self.record_layer.encrypt_outgoing(m);
+        println!("CommonState::send_single_fragment2");
+
         self.queue_tls_message(em);
     }
 
@@ -377,6 +381,7 @@ impl CommonState {
     /// Send a raw TLS message, fragmenting it if needed.
     pub(crate) fn send_msg(&mut self, m: Message, must_encrypt: bool) {
         {
+            println!("CommonState::send_msg");
             if let Protocol::Quic = self.protocol {
                 if let MessagePayload::Alert(alert) = m.payload {
                     self.quic.alert = Some(alert.description);
@@ -394,7 +399,11 @@ impl CommonState {
                 return;
             }
         }
+        println!("CommonState::send_msg2");
+
         if !must_encrypt {
+            println!("CommonState::send_msg4");
+
             let msg = &m.into();
             let iter = self
                 .message_fragmenter
@@ -403,6 +412,8 @@ impl CommonState {
                 self.queue_tls_message(m.to_unencrypted_opaque());
             }
         } else {
+            println!("CommonState::send_msg3");
+
             self.send_msg_encrypt(m.into());
         }
     }

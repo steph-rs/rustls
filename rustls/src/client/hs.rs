@@ -38,6 +38,7 @@ use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
 use core::ops::Deref;
+use std::println;
 
 pub(super) type NextState = Box<dyn State<ClientConnectionData>>;
 pub(super) type NextStateOrError = Result<NextState, Error>;
@@ -96,6 +97,7 @@ pub(super) fn start_handshake(
     config: Arc<ClientConfig>,
     cx: &mut ClientContext<'_>,
 ) -> NextStateOrError {
+    println!("start_handshake");
     let mut transcript_buffer = HandshakeHashBuffer::new();
     if config
         .client_auth_cert_resolver
@@ -131,6 +133,8 @@ pub(super) fn start_handshake(
         debug!("Not resuming any session");
     }
 
+    println!("start_handshake2");
+
     // https://tools.ietf.org/html/rfc8446#appendix-D.4
     // https://tools.ietf.org/html/draft-ietf-quic-tls-34#section-8.4
     let session_id = match session_id {
@@ -141,6 +145,8 @@ pub(super) fn start_handshake(
     };
 
     let random = Random::new(config.provider.secure_random)?;
+
+    println!("start_handshake3");
 
     Ok(emit_client_hello_for_retry(
         transcript_buffer,
@@ -197,6 +203,7 @@ fn emit_client_hello_for_retry(
     mut input: ClientHelloInput,
     cx: &mut ClientContext<'_>,
 ) -> NextState {
+    println!("emit_client_hello_for_retry");
     let config = &input.config;
     let support_tls12 = config.supports_version(ProtocolVersion::TLSv1_2) && !cx.common.is_quic();
     let support_tls13 = config.supports_version(ProtocolVersion::TLSv1_3);
@@ -212,6 +219,8 @@ fn emit_client_hello_for_retry(
 
     // should be unreachable thanks to config builder
     assert!(!supported_versions.is_empty());
+
+    println!("emit_client_hello_for_retry2");
 
     let mut exts = vec![
         ClientExtension::SupportedVersions(supported_versions),
@@ -255,6 +264,8 @@ fn emit_client_hello_for_retry(
         exts.push(ClientExtension::PresharedKeyModes(psk_modes));
     }
 
+    println!("emit_client_hello_for_retry3");
+
     if !config.alpn_protocols.is_empty() {
         exts.push(ClientExtension::Protocols(Vec::from_slices(
             &config
@@ -277,6 +288,8 @@ fn emit_client_hello_for_retry(
         .map(ClientExtension::get_type)
         .collect();
 
+    println!("emit_client_hello_for_retry4");
+
     let mut cipher_suites: Vec<_> = config
         .provider
         .cipher_suites
@@ -288,6 +301,8 @@ fn emit_client_hello_for_retry(
         .collect();
     // We don't do renegotiation at all, in fact.
     cipher_suites.push(CipherSuite::TLS_EMPTY_RENEGOTIATION_INFO_SCSV);
+
+    println!("emit_client_hello_for_retry5");
 
     let mut chp = HandshakeMessagePayload {
         typ: HandshakeType::ClientHello,
@@ -328,8 +343,13 @@ fn emit_client_hello_for_retry(
 
     trace!("Sending ClientHello {:#?}", ch);
 
+    println!("emit_client_hello_for_retry6");
+
     transcript_buffer.add_message(&ch);
+
     cx.common.send_msg(ch, false);
+
+    println!("emit_client_hello_for_retry7");
 
     // Calculate the hash of ClientHello and use it to derive EarlyTrafficSecret
     let early_key_schedule = early_key_schedule.map(|(resuming_suite, schedule)| {
@@ -356,6 +376,8 @@ fn emit_client_hello_for_retry(
         offered_key_share: key_share,
         suite,
     };
+
+    println!("emit_client_hello_for_retry8");
 
     if support_tls13 && retryreq.is_none() {
         Box::new(ExpectServerHelloOrHelloRetryRequest { next, extra_exts })

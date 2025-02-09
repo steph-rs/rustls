@@ -28,7 +28,7 @@ use core::fmt;
 use core::marker::PhantomData;
 use core::mem;
 use core::ops::{Deref, DerefMut};
-use std::io;
+use std::{io, println};
 
 #[cfg(doc)]
 use crate::{crypto, DistinguishedName};
@@ -643,6 +643,7 @@ impl ConnectionCore<ClientConnectionData> {
         extra_exts: Vec<ClientExtension>,
         proto: Protocol,
     ) -> Result<Self, Error> {
+        println!("ClientConnection::for_client");
         let mut common_state = CommonState::new(Side::Client);
         common_state.set_max_fragment_size(config.max_fragment_size)?;
         common_state.protocol = proto;
@@ -653,6 +654,8 @@ impl ConnectionCore<ClientConnectionData> {
             common: &mut common_state,
             data: &mut data,
         };
+
+        println!("ClientConnection::for_client start_handshake");
 
         let state = hs::start_handshake(name, extra_exts, config, &mut cx)?;
         Ok(Self::new(state, data, common_state))
