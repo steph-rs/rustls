@@ -47,6 +47,7 @@ use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
+use std::println;
 
 // Extensions we expect in plaintext in the ServerHello.
 static ALLOWED_PLAINTEXT_EXTS: &[ExtensionType] = &[
@@ -206,12 +207,18 @@ pub(super) fn initial_key_share(
     config: &ClientConfig,
     server_name: &ServerName<'_>,
 ) -> Result<Box<dyn ActiveKeyExchange>, Error> {
+    println!("initial_key_share");
     let group = config
         .resumption
         .store
         .kx_hint(server_name)
-        .and_then(|group_name| config.find_kx_group(group_name))
+        .and_then(|group_name| {
+            println!("initial_key_share1");
+            config.find_kx_group(group_name)
+        })
         .unwrap_or_else(|| {
+            println!("initial_key_share2");
+
             config
                 .provider
                 .kx_groups
@@ -220,6 +227,8 @@ pub(super) fn initial_key_share(
                 .next()
                 .expect("No kx groups configured")
         });
+
+    println!("initial_key_share3");
 
     group
         .start()
