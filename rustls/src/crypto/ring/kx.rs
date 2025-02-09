@@ -10,6 +10,7 @@ use super::ring_like::rand::SystemRandom;
 
 use alloc::boxed::Box;
 use core::fmt;
+use std::println;
 
 /// A key-exchange group supported by *ring*.
 ///
@@ -25,13 +26,20 @@ struct KxGroup {
 
 impl SupportedKxGroup for KxGroup {
     fn start(&self) -> Result<Box<dyn ActiveKeyExchange>, Error> {
+        println!("KxGroup::start");
         let rng = SystemRandom::new();
+        println!("KxGroup::start2");
+
         let priv_key = agreement::EphemeralPrivateKey::generate(self.agreement_algorithm, &rng)
             .map_err(|_| GetRandomFailed)?;
+
+        println!("KxGroup::start3");
 
         let pub_key = priv_key
             .compute_public_key()
             .map_err(|_| GetRandomFailed)?;
+
+        println!("KxGroup::start4");
 
         Ok(Box::new(KeyExchange {
             name: self.name,
