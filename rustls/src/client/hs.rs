@@ -99,20 +99,31 @@ pub(super) fn start_handshake(
 ) -> NextStateOrError {
     println!("start_handshake");
     let mut transcript_buffer = HandshakeHashBuffer::new();
+    println!("start_handshake 2");
+
     if config
         .client_auth_cert_resolver
         .has_certs()
     {
+        println!("start_handshake 3");
+
         transcript_buffer.set_client_auth_enabled();
     }
 
+    println!("start_handshake 4");
+
     let mut resuming = find_session(&server_name, &config, cx);
+
+    println!("start_handshake 5");
 
     let key_share = if config.supports_version(ProtocolVersion::TLSv1_3) {
         Some(tls13::initial_key_share(&config, &server_name)?)
     } else {
         None
     };
+
+    println!("start_handshake 6");
+
 
     #[cfg_attr(not(feature = "tls12"), allow(unused_mut))]
     let mut session_id = None;
@@ -122,14 +133,22 @@ pub(super) fn start_handshake(
             // If we have a ticket, we use the sessionid as a signal that
             // we're  doing an abbreviated handshake.  See section 3.4 in
             // RFC5077.
+            println!("start_handshake 7");
+
             if !inner.ticket().is_empty() {
                 inner.session_id = SessionId::random(config.provider.secure_random)?;
             }
+            println!("start_handshake 8");
+
             session_id = Some(inner.session_id);
         }
 
+        println!("start_handshake 9");
+
         debug!("Resuming session");
     } else {
+        println!("start_handshake 10");
+
         debug!("Not resuming any session");
     }
 
