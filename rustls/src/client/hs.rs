@@ -21,7 +21,7 @@ use crate::msgs::handshake::{Random, SessionId};
 use crate::msgs::message::{Message, MessagePayload};
 use crate::msgs::persist;
 use crate::tls13::key_schedule::KeyScheduleEarly;
-use crate::SupportedCipherSuite;
+use crate::{versions, SupportedCipherSuite, SupportedProtocolVersion};
 
 #[cfg(feature = "tls12")]
 use super::tls12;
@@ -39,6 +39,7 @@ use alloc::vec;
 use alloc::vec::Vec;
 use core::ops::Deref;
 use std::println;
+use crate::version::TLS12;
 
 pub(super) type NextState = Box<dyn State<ClientConnectionData>>;
 pub(super) type NextStateOrError = Result<NextState, Error>;
@@ -100,6 +101,8 @@ pub(super) fn start_handshake(
     println!("start_handshake");
     println!("start_handshake buffer");
 
+    let mut config = config.deref().clone();
+
     let mut transcript_buffer = HandshakeHashBuffer::new();
     println!("start_handshake 2");
 
@@ -117,6 +120,9 @@ pub(super) fn start_handshake(
     let mut resuming = find_session(&server_name, &config, cx);
 
     println!("start_handshake 5");
+
+    // Disable tls1.3 version
+    config.versions = versions::EnabledVersions::new(&[&TLS12]);
 
     let key_share = if config.supports_version(ProtocolVersion::TLSv1_3) {
         Some(tls13::initial_key_share(&config, &server_name)?)
@@ -176,7 +182,7 @@ pub(super) fn start_handshake(
         extra_exts,
         None,
         ClientHelloInput {
-            config,
+            config: Arc::new(config),
             resuming,
             random,
             #[cfg(feature = "tls12")]
