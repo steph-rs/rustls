@@ -678,6 +678,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
 
         println!("ExpectServerHello handle101010");
 
+        println!("hash provider: {:?}", suite.hash_provider().algorithm());
+
         // Start our handshake hash, and input the server-hello.
         let mut transcript = self
             .transcript_buffer
