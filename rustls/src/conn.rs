@@ -659,9 +659,14 @@ impl<Data> ConnectionCore<Data> {
 
         let mut borrowed_buffer = deframer_buffer.borrow();
         while let Some(msg) = self.deframe(Some(&*state), &mut borrowed_buffer)? {
+            println!("process_new_packets2, msg: {:?}", msg);
             match self.process_msg(msg, state) {
-                Ok(new) => state = new,
+                Ok(new) => {
+                    println!("process_new_packets2, new: {:?}", new);
+                    state = new
+                },
                 Err(e) => {
+                    println!("process_new_packets2, err: {:?}", e);
                     self.state = Err(e.clone());
                     let discard = borrowed_buffer.pending_discard();
                     deframer_buffer.discard(discard);
@@ -687,6 +692,7 @@ impl<Data> ConnectionCore<Data> {
         state: Option<&dyn State<Data>>,
         deframer_buffer: &mut DeframerSliceBuffer,
     ) -> Result<Option<PlainMessage>, Error> {
+        println!("deframe0");
         match self.message_deframer.pop(
             &mut self.common_state.record_layer,
             self.common_state.negotiated_version,
@@ -744,6 +750,7 @@ impl<Data> ConnectionCore<Data> {
         msg: PlainMessage,
         state: Box<dyn State<Data>>,
     ) -> Result<Box<dyn State<Data>>, Error> {
+        println!("process_msg0");
         // Drop CCS messages during handshake in TLS1.3
         if msg.typ == ContentType::ChangeCipherSpec
             && !self
@@ -751,6 +758,7 @@ impl<Data> ConnectionCore<Data> {
                 .may_receive_application_data
             && self.common_state.is_tls13()
         {
+            println!("process_msg1");
             if !is_valid_ccs(&msg)
                 || self.common_state.received_middlebox_ccs > TLS13_MAX_DROPPED_CCS
             {
@@ -768,6 +776,8 @@ impl<Data> ConnectionCore<Data> {
             }
         }
 
+        println!("process_msg2");
+
         // Now we can fully parse the message payload.
         let msg = match Message::try_from(msg) {
             Ok(msg) => msg,
@@ -778,11 +788,15 @@ impl<Data> ConnectionCore<Data> {
             }
         };
 
+        println!("process_msg3");
+
         // For alerts, we have separate logic.
         if let MessagePayload::Alert(alert) = &msg.payload {
             self.common_state.process_alert(alert)?;
             return Ok(state);
         }
+
+        println!("process_msg4");
 
         self.common_state
             .process_main_protocol(msg, state, &mut self.data)

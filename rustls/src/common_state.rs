@@ -151,12 +151,17 @@ impl CommonState {
     ) -> Result<Box<dyn State<Data>>, Error> {
         // For TLS1.2, outside of the handshake, send rejection alerts for
         // renegotiation requests.  These can occur any time.
+        println!("process_main_protocol0");
         if self.may_receive_application_data && !self.is_tls13() {
+            println!("process_main_protocol1");
+
             let reject_ty = match self.side {
                 Side::Client => HandshakeType::HelloRequest,
                 Side::Server => HandshakeType::ClientHello,
             };
             if msg.is_handshake_type(reject_ty) {
+                println!("process_main_protocol2");
+
                 self.send_warning_alert(AlertDescription::NoRenegotiation);
                 return Ok(state);
             }
@@ -165,6 +170,7 @@ impl CommonState {
         let mut cx = Context { common: self, data };
         match state.handle(&mut cx, msg) {
             Ok(next) => {
+                println!("process_main_protocol3");
                 state = next;
                 Ok(state)
             }
