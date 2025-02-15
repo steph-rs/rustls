@@ -528,13 +528,18 @@ pub(super) fn process_alpn_protocol(
 
 impl State<ClientConnectionData> for ExpectServerHello {
     fn handle(mut self: Box<Self>, cx: &mut ClientContext<'_>, m: Message) -> NextStateOrError {
+        println!("ExpectServerHello handle");
         let server_hello =
             require_handshake_msg!(m, HandshakeType::ServerHello, HandshakePayload::ServerHello)?;
         trace!("We got ServerHello {:#?}", server_hello);
 
+        println!("We got ServerHello {:#?}", server_hello);
+
         use crate::ProtocolVersion::{TLSv1_2, TLSv1_3};
         let config = &self.input.config;
         let tls13_supported = config.supports_version(TLSv1_3);
+
+        println!("ExpectServerHello handle2 is tls13_supported: {}", tls13_supported);
 
         let server_version = if server_hello.legacy_version == TLSv1_2 {
             server_hello
@@ -543,6 +548,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
         } else {
             server_hello.legacy_version
         };
+
+        println!("ExpectServerHello handle3 server_version: {:?}", server_version);
 
         let version = match server_version {
             TLSv1_3 if tls13_supported => TLSv1_3,
@@ -577,6 +584,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
                     .send_fatal_alert(AlertDescription::ProtocolVersion, reason));
             }
         };
+
+        println!("ExpectServerHello handle4 version: {:?}", version);
 
         if server_hello.compression_method != Compression::Null {
             return Err({
