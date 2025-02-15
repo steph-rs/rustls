@@ -651,7 +651,7 @@ impl State<ClientConnectionData> for ExpectServerHello {
         //     }
         // }
 
-        let sgx_suite = CipherSuite::TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384;
+        let sgx_suite = CipherSuite::TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256;
         let suite = config
             .find_cipher_suite(sgx_suite)
             .ok_or_else(|| {
