@@ -644,8 +644,9 @@ impl State<ClientConnectionData> for ExpectServerHello {
 
         println!("chiper suite: {:?}", server_hello.cipher_suite);
 
+        let sgx_suite = CipherSuite::TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256;
         let suite = config
-            .find_cipher_suite(server_hello.cipher_suite)
+            .find_cipher_suite(sgx_suite)
             .ok_or_else(|| {
                 cx.common.send_fatal_alert(
                     AlertDescription::HandshakeFailure,
