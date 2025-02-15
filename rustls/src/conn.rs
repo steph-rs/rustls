@@ -13,7 +13,7 @@ use alloc::boxed::Box;
 use core::fmt::Debug;
 use core::mem;
 use core::ops::{Deref, DerefMut};
-use std::io;
+use std::{io, println};
 
 /// A client or server connection.
 #[derive(Debug)]
@@ -646,6 +646,7 @@ impl<Data> ConnectionCore<Data> {
         &mut self,
         deframer_buffer: &mut DeframerVecBuffer,
     ) -> Result<IoState, Error> {
+        println!("process_new_packets");
         let mut state = match mem::replace(&mut self.state, Err(Error::HandshakeNotComplete)) {
             Ok(state) => state,
             Err(e) => {
@@ -653,6 +654,8 @@ impl<Data> ConnectionCore<Data> {
                 return Err(e);
             }
         };
+
+        println!("process_new_packets1");
 
         let mut borrowed_buffer = deframer_buffer.borrow();
         while let Some(msg) = self.deframe(Some(&*state), &mut borrowed_buffer)? {
@@ -667,9 +670,14 @@ impl<Data> ConnectionCore<Data> {
             }
         }
 
+        println!("process_new_packets2");
+
+
         let discard = borrowed_buffer.pending_discard();
         deframer_buffer.discard(discard);
         self.state = Ok(state);
+        println!("process_new_packets3");
+
         Ok(self.common_state.current_io_state())
     }
 
