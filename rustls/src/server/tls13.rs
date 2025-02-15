@@ -868,8 +868,9 @@ impl State<ServerConnectionData> for ExpectAndSkipRejectedEarlyData {
         self.next.handle(cx, m)
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/13/ExpectAndSkipRejectedEarlyData"
     }
 }
 
@@ -943,8 +944,9 @@ impl State<ServerConnectionData> for ExpectCertificate {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/13/ExpectCertificate"
     }
 }
 
@@ -994,8 +996,9 @@ impl State<ServerConnectionData> for ExpectCertificateVerify {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/13/ExpectCertificateVerify"
     }
 }
 
@@ -1053,8 +1056,9 @@ impl State<ServerConnectionData> for ExpectEarlyData {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/13/ExpectEarlyData"
     }
 }
 
@@ -1217,8 +1221,9 @@ impl State<ServerConnectionData> for ExpectFinished {
         })
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/13/ExpectFinished"
     }
 }
 
@@ -1296,8 +1301,9 @@ impl State<ServerConnectionData> for ExpectTraffic {
             .extract_secrets(Side::Server)
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/13/ExpectTraffic"
     }
 }
 
@@ -1322,7 +1328,8 @@ impl State<ServerConnectionData> for ExpectQuicTraffic {
             .export_keying_material(output, label, context)
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/13/ExpectQuicTraffic"
     }
 }

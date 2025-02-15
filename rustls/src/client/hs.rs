@@ -718,8 +718,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "ExpectServerHello"
     }
 }
 
@@ -925,8 +925,8 @@ impl State<ClientConnectionData> for ExpectServerHelloOrHelloRetryRequest {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "ExpectServerHelloOrHelloRetryRequest"
     }
 }
 

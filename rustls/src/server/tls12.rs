@@ -573,8 +573,8 @@ impl State<ServerConnectionData> for ExpectCertificate {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "server/12/ExpectCertificate"
     }
 }
 
@@ -646,8 +646,9 @@ impl State<ServerConnectionData> for ExpectClientKx {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/12/ExpectClientKx"
     }
 }
 
@@ -713,8 +714,9 @@ impl State<ServerConnectionData> for ExpectCertificateVerify {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/12/ExpectCertificateVerify"
     }
 }
 
@@ -759,8 +761,9 @@ impl State<ServerConnectionData> for ExpectCcs {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/12/ExpectCcs"
     }
 }
 
@@ -931,8 +934,9 @@ impl State<ServerConnectionData> for ExpectFinished {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/12/ExpectFinished"
     }
 }
 
@@ -976,7 +980,8 @@ impl State<ServerConnectionData> for ExpectTraffic {
             .extract_secrets(Side::Server)
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "server/12/ExpectTraffic"
     }
 }

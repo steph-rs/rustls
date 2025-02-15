@@ -467,8 +467,9 @@ impl State<ClientConnectionData> for ExpectEncryptedExtensions {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/13/ExpectEncryptedExtensions"
     }
 }
 
@@ -528,8 +529,9 @@ impl State<ClientConnectionData> for ExpectCertificateOrCertReq {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/13/ExpectCertificateOrCertReq"
     }
 }
 
@@ -603,8 +605,9 @@ impl State<ClientConnectionData> for ExpectCertificateRequest {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/13/ExpectCertificateRequest"
     }
 }
 
@@ -658,8 +661,9 @@ impl State<ClientConnectionData> for ExpectCertificate {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/13/ExpectCertificate"
     }
 }
 
@@ -737,8 +741,9 @@ impl State<ClientConnectionData> for ExpectCertificateVerify {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/13/ExpectCertificateVerify"
     }
 }
 
@@ -944,8 +949,8 @@ impl State<ClientConnectionData> for ExpectFinished {
         })
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "client/13/ExpectFinished"
     }
 }
 
@@ -1090,8 +1095,9 @@ impl State<ClientConnectionData> for ExpectTraffic {
             .extract_secrets(Side::Client)
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/13/ExpectTraffic"
     }
 }
 
@@ -1119,7 +1125,8 @@ impl State<ClientConnectionData> for ExpectQuicTraffic {
             .export_keying_material(output, label, context)
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/13/ExpectQuicTraffic"
     }
 }

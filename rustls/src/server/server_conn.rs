@@ -751,8 +751,8 @@ impl State<ServerConnectionData> for Accepting {
         Err(Error::General("unreachable state".into()))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "Accepting"
     }
 }
 

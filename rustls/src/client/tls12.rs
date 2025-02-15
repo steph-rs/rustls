@@ -237,8 +237,8 @@ impl State<ClientConnectionData> for ExpectCertificate {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectCertificate"
     }
 }
 
@@ -309,8 +309,8 @@ impl State<ClientConnectionData> for ExpectCertificateStatusOrServerKx {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectCertificateStatusOrServerKx"
     }
 }
 
@@ -362,8 +362,9 @@ impl State<ClientConnectionData> for ExpectCertificateStatus {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectCertificateStatus"
     }
 }
 
@@ -423,8 +424,8 @@ impl State<ClientConnectionData> for ExpectServerKx {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectServerKx"
     }
 }
 
@@ -597,8 +598,9 @@ impl State<ClientConnectionData> for ExpectServerDoneOrCertReq {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectServerDoneOrCertReq"
     }
 }
 
@@ -662,8 +664,9 @@ impl State<ClientConnectionData> for ExpectCertificateRequest {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectCertificateRequest"
     }
 }
 
@@ -868,8 +871,9 @@ impl State<ClientConnectionData> for ExpectServerDone {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectServerDone"
     }
 }
 
@@ -915,8 +919,8 @@ impl State<ClientConnectionData> for ExpectNewTicket {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectNewTicket"
     }
 }
 
@@ -970,8 +974,8 @@ impl State<ClientConnectionData> for ExpectCcs {
         }))
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectCcs"
     }
 }
 
@@ -1089,8 +1093,9 @@ impl State<ClientConnectionData> for ExpectFinished {
         }
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectFinished"
     }
 }
 
@@ -1134,7 +1139,8 @@ impl State<ClientConnectionData> for ExpectTraffic {
             .extract_secrets(Side::Client)
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "client/12/ExpectTraffic"
     }
 }

@@ -432,8 +432,9 @@ impl State<ServerConnectionData> for ExpectClientHello {
         self.with_certified_key(sig_schemes, client_hello, &m, cx)
     }
 
-    fn as_any(&self) -> &dyn Any {
-        self
+
+    fn state_name(&self) -> &'static str {
+        "ExpectClientHello"
     }
 }
 
