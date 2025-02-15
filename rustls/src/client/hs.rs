@@ -605,6 +605,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
             ));
         }
 
+        println!("ExpectServerHello handle6");
+
         let allowed_unsolicited = [ExtensionType::RenegotiationInfo];
         if self
             .input
@@ -617,6 +619,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
             ));
         }
 
+        println!("ExpectServerHello handle7");
+
         cx.common.negotiated_version = Some(version);
 
         // Extract ALPN protocol
@@ -624,6 +628,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
             process_alpn_protocol(cx.common, config, server_hello.get_alpn_protocol())?;
         }
 
+
+        println!("ExpectServerHello handle8");
         // If ECPointFormats extension is supplied by the server, it must contain
         // Uncompressed.  But it's allowed to be omitted.
         if let Some(point_fmts) = server_hello.get_ecpoints_extension() {
@@ -644,6 +650,7 @@ impl State<ClientConnectionData> for ExpectServerHello {
                 )
             })?;
 
+        println!("ExpectServerHello handle9");
         if version != suite.version().version {
             return Err({
                 cx.common.send_fatal_alert(
@@ -669,13 +676,20 @@ impl State<ClientConnectionData> for ExpectServerHello {
             }
         }
 
+        println!("ExpectServerHello handle101010");
+
         // Start our handshake hash, and input the server-hello.
         let mut transcript = self
             .transcript_buffer
             .start_hash(suite.hash_provider());
         transcript.add_message(&m);
 
+        println!("ExpectServerHello handle10");
+
         let randoms = ConnectionRandoms::new(self.input.random, server_hello.random);
+
+        println!("ExpectServerHello handle11");
+
         // For TLS1.3, start message encryption using
         // handshake_traffic_secret.
         match suite {
