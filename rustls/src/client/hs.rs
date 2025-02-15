@@ -684,6 +684,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
         let mut transcript = self
             .transcript_buffer
             .start_hash(suite.hash_provider());
+
+        println!("ExpectServerHello handle101011");
         transcript.add_message(&m);
 
         println!("ExpectServerHello handle10");
