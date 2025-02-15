@@ -641,6 +641,9 @@ impl State<ClientConnectionData> for ExpectServerHello {
             }
         }
 
+
+        println!("chiper suite: {:?}", server_hello.cipher_suite);
+
         let suite = config
             .find_cipher_suite(server_hello.cipher_suite)
             .ok_or_else(|| {
@@ -680,6 +683,7 @@ impl State<ClientConnectionData> for ExpectServerHello {
 
         println!("hash provider: {:?}", suite.hash_provider().algorithm());
 
+        println!("suite: {:?}", suite);
         // Start our handshake hash, and input the server-hello.
         let mut transcript = self
             .transcript_buffer
