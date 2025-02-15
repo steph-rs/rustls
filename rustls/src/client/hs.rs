@@ -21,7 +21,7 @@ use crate::msgs::handshake::{Random, SessionId};
 use crate::msgs::message::{Message, MessagePayload};
 use crate::msgs::persist;
 use crate::tls13::key_schedule::KeyScheduleEarly;
-use crate::{versions, SupportedCipherSuite, SupportedProtocolVersion};
+use crate::{crypto, versions, SupportedCipherSuite, SupportedProtocolVersion};
 
 #[cfg(feature = "tls12")]
 use super::tls12;
@@ -643,6 +643,13 @@ impl State<ClientConnectionData> for ExpectServerHello {
 
 
         println!("chiper suite: {:?}", server_hello.cipher_suite);
+
+        let all_suites = &config.provider.cipher_suites;
+        for suite in all_suites {
+            if !core::ptr::eq(&suite.hash_provider().algorithm(), &crypto::hash::HashAlgorithm::SHA256) {
+                println!("Found non-SHA256 suite: {:?}", suite.suite());
+            }
+        }
 
         let sgx_suite = CipherSuite::TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256;
         let suite = config
