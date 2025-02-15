@@ -662,7 +662,7 @@ impl<Data> ConnectionCore<Data> {
             println!("process_new_packets2, msg: {:?}", msg);
             match self.process_msg(msg, state) {
                 Ok(new) => {
-                    println!("process_new_packets2, new: {:?}", new);
+                    println!("process_new_packets2");
                     state = new
                 },
                 Err(e) => {
