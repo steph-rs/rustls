@@ -34,7 +34,7 @@ use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
-
+use std::any::Any;
 use pki_types::{CertificateDer, UnixTime};
 use subtle::ConstantTimeEq;
 
@@ -867,6 +867,10 @@ impl State<ServerConnectionData> for ExpectAndSkipRejectedEarlyData {
 
         self.next.handle(cx, m)
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectCertificate {
@@ -938,6 +942,10 @@ impl State<ServerConnectionData> for ExpectCertificate {
             send_tickets: self.send_tickets,
         }))
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectCertificateVerify {
@@ -984,6 +992,10 @@ impl State<ServerConnectionData> for ExpectCertificateVerify {
             transcript: self.transcript,
             send_tickets: self.send_tickets,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -1039,6 +1051,10 @@ impl State<ServerConnectionData> for ExpectEarlyData {
                 &[HandshakeType::EndOfEarlyData],
             )),
         }
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -1200,6 +1216,10 @@ impl State<ServerConnectionData> for ExpectFinished {
             }),
         })
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 // --- Process traffic ---
@@ -1275,6 +1295,10 @@ impl State<ServerConnectionData> for ExpectTraffic {
         self.key_schedule
             .extract_secrets(Side::Server)
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectQuicTraffic {
@@ -1296,5 +1320,9 @@ impl State<ServerConnectionData> for ExpectQuicTraffic {
     ) -> Result<(), Error> {
         self.key_schedule
             .export_keying_material(output, label, context)
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }

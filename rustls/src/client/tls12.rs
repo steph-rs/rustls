@@ -35,7 +35,7 @@ use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
-
+use std::any::Any;
 pub(super) use server_hello::CompleteServerHelloHandling;
 
 mod server_hello {
@@ -236,6 +236,10 @@ impl State<ClientConnectionData> for ExpectCertificate {
             }))
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectCertificateStatusOrServerKx {
@@ -304,6 +308,10 @@ impl State<ClientConnectionData> for ExpectCertificateStatusOrServerKx {
             )),
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectCertificateStatus {
@@ -352,6 +360,10 @@ impl State<ClientConnectionData> for ExpectCertificateStatus {
             server_cert,
             must_issue_new_ticket: self.must_issue_new_ticket,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -409,6 +421,10 @@ impl State<ClientConnectionData> for ExpectServerKx {
             server_kx,
             must_issue_new_ticket: self.must_issue_new_ticket,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -580,6 +596,10 @@ impl State<ClientConnectionData> for ExpectServerDoneOrCertReq {
             .handle(cx, m)
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectCertificateRequest {
@@ -640,6 +660,10 @@ impl State<ClientConnectionData> for ExpectCertificateRequest {
             client_auth: Some(client_auth),
             must_issue_new_ticket: self.must_issue_new_ticket,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -843,6 +867,10 @@ impl State<ClientConnectionData> for ExpectServerDone {
             }))
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectNewTicket {
@@ -885,6 +913,10 @@ impl State<ClientConnectionData> for ExpectNewTicket {
             cert_verified: self.cert_verified,
             sig_verified: self.sig_verified,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -936,6 +968,10 @@ impl State<ClientConnectionData> for ExpectCcs {
             cert_verified: self.cert_verified,
             sig_verified: self.sig_verified,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -1052,6 +1088,10 @@ impl State<ClientConnectionData> for ExpectFinished {
                 .remove_tls12_session(&self.server_name);
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 // -- Traffic transit state --
@@ -1092,5 +1132,9 @@ impl State<ClientConnectionData> for ExpectTraffic {
     fn extract_secrets(&self) -> Result<PartiallyExtractedSecrets, Error> {
         self.secrets
             .extract_secrets(Side::Client)
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }

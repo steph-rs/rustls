@@ -19,6 +19,7 @@ use crate::vecbuf::ChunkVecBuffer;
 
 use alloc::boxed::Box;
 use alloc::vec::Vec;
+use std::any::Any;
 use std::println;
 use pki_types::CertificateDer;
 
@@ -167,7 +168,15 @@ impl CommonState {
             }
         }
 
+        println!("process_main_protocol11");
+
+
         let mut cx = Context { common: self, data };
+        println!("process_main_protocol12");
+
+        println!("process_main_protocol13, state: {:?}", std::any::type_name_of_val(&*state));
+        println!("Current state type: {}", std::any::type_name_of_val(&*state));
+        println!("Current state type: {}", std::any::type_name_of_val(state.as_any()));
         match state.handle(&mut cx, msg) {
             Ok(next) => {
                 println!("process_main_protocol3");
@@ -649,6 +658,8 @@ pub(crate) trait State<Data>: Send + Sync {
     }
 
     fn handle_decrypt_error(&self) {}
+
+    fn as_any(&self) -> &dyn Any;
 }
 
 pub(crate) struct Context<'a, Data> {

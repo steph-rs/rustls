@@ -34,7 +34,7 @@ use alloc::string::ToString;
 use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
-
+use std::any::Any;
 pub(super) use client_hello::CompleteClientHelloHandling;
 
 mod client_hello {
@@ -572,6 +572,10 @@ impl State<ServerConnectionData> for ExpectCertificate {
             send_ticket: self.send_ticket,
         }))
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 // --- Process client's KeyExchange ---
@@ -641,6 +645,10 @@ impl State<ServerConnectionData> for ExpectClientKx {
             }))
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 // --- Process client's certificate proof ---
@@ -704,6 +712,10 @@ impl State<ServerConnectionData> for ExpectCertificateVerify {
             send_ticket: self.send_ticket,
         }))
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 // --- Process client's ChangeCipherSpec ---
@@ -745,6 +757,10 @@ impl State<ServerConnectionData> for ExpectCcs {
             resuming: self.resuming,
             send_ticket: self.send_ticket,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -914,6 +930,10 @@ impl State<ServerConnectionData> for ExpectFinished {
             _fin_verified,
         }))
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 // --- Process traffic ---
@@ -954,5 +974,9 @@ impl State<ServerConnectionData> for ExpectTraffic {
     fn extract_secrets(&self) -> Result<PartiallyExtractedSecrets, Error> {
         self.secrets
             .extract_secrets(Side::Server)
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }

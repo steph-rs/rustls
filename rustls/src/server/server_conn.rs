@@ -29,6 +29,7 @@ use core::fmt;
 use core::fmt::{Debug, Formatter};
 use core::marker::PhantomData;
 use core::ops::{Deref, DerefMut};
+use std::any::Any;
 use std::io;
 
 #[cfg(doc)]
@@ -748,6 +749,10 @@ impl State<ServerConnectionData> for Accepting {
         _m: Message,
     ) -> Result<Box<dyn State<ServerConnectionData>>, Error> {
         Err(Error::General("unreachable state".into()))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 

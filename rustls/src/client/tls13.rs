@@ -47,6 +47,7 @@ use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
+use std::any::Any;
 use std::println;
 
 // Extensions we expect in plaintext in the ServerHello.
@@ -465,6 +466,10 @@ impl State<ClientConnectionData> for ExpectEncryptedExtensions {
             }))
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectCertificateOrCertReq {
@@ -521,6 +526,10 @@ impl State<ClientConnectionData> for ExpectCertificateOrCertReq {
                 ],
             )),
         }
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -593,6 +602,10 @@ impl State<ClientConnectionData> for ExpectCertificateRequest {
             client_auth: Some(client_auth),
         }))
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectCertificate {
@@ -643,6 +656,10 @@ impl State<ClientConnectionData> for ExpectCertificate {
             server_cert,
             client_auth: self.client_auth,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -718,6 +735,10 @@ impl State<ClientConnectionData> for ExpectCertificateVerify {
             cert_verified,
             sig_verified,
         }))
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
@@ -922,6 +943,10 @@ impl State<ClientConnectionData> for ExpectFinished {
             false => Box::new(st),
         })
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 // -- Traffic transit state (TLS1.3) --
@@ -1064,6 +1089,10 @@ impl State<ClientConnectionData> for ExpectTraffic {
         self.key_schedule
             .extract_secrets(Side::Client)
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 struct ExpectQuicTraffic(ExpectTraffic);
@@ -1088,5 +1117,9 @@ impl State<ClientConnectionData> for ExpectQuicTraffic {
     ) -> Result<(), Error> {
         self.0
             .export_keying_material(output, label, context)
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }

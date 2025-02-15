@@ -38,6 +38,7 @@ use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
 use core::ops::Deref;
+use std::any::Any;
 use std::println;
 use crate::version::TLS12;
 
@@ -716,6 +717,10 @@ impl State<ClientConnectionData> for ExpectServerHello {
             }
         }
     }
+
+    fn as_any(&self) -> &dyn Any {
+        self
+    }
 }
 
 impl ExpectServerHelloOrHelloRetryRequest {
@@ -918,6 +923,10 @@ impl State<ClientConnectionData> for ExpectServerHelloOrHelloRetryRequest {
                 &[HandshakeType::ServerHello, HandshakeType::HelloRetryRequest],
             )),
         }
+    }
+
+    fn as_any(&self) -> &dyn Any {
+        self
     }
 }
 
