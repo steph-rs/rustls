@@ -27,6 +27,7 @@ use alloc::vec;
 use alloc::vec::Vec;
 use core::fmt;
 use core::ops::Deref;
+use std::println;
 
 /// Create a newtype wrapper around a given type.
 ///
@@ -1640,7 +1641,10 @@ pub(crate) trait HasServerExtensions {
     /// Returns true if there is more than one extension of a given
     /// type.
     fn has_duplicate_extension(&self) -> bool {
+        println!("has_duplicate_extension");
         let mut seen = BTreeSet::new();
+
+        println!("has_duplicate_extension1");
 
         for ext in self.get_extensions() {
             let typ = ext.get_type().get_u16();

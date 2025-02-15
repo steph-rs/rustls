@@ -596,6 +596,8 @@ impl State<ClientConnectionData> for ExpectServerHello {
             });
         }
 
+        println!("ExpectServerHello handle5");
+
         if server_hello.has_duplicate_extension() {
             return Err(cx.common.send_fatal_alert(
                 AlertDescription::DecodeError,
