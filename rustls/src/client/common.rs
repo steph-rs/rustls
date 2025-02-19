@@ -9,6 +9,7 @@ use crate::{sign, SignatureScheme};
 use alloc::boxed::Box;
 use alloc::sync::Arc;
 use alloc::vec::Vec;
+use std::println;
 
 #[derive(Debug)]
 pub(super) struct ServerCertDetails {
@@ -72,15 +73,21 @@ impl ClientAuthDetails {
         sigschemes: &[SignatureScheme],
         auth_context_tls13: Option<Vec<u8>>,
     ) -> Self {
+        println!("ClientAuthDetails::resolve");
         let acceptable_issuers = canames
             .unwrap_or_default()
             .iter()
             .map(|p| p.as_ref())
             .collect::<Vec<&[u8]>>();
 
+        println!("ClientAuthDetails::resolve1");
+
         if let Some(certkey) = resolver.resolve(&acceptable_issuers, sigschemes) {
+            println!("ClientAuthDetails::resolve1.1");
             if let Some(signer) = certkey.key.choose_scheme(sigschemes) {
                 debug!("Attempting client auth");
+                println!("ClientAuthDetails::resolve2");
+
                 return Self::Verify {
                     certkey,
                     signer,

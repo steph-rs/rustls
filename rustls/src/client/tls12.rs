@@ -36,6 +36,7 @@ use alloc::sync::Arc;
 use alloc::vec;
 use alloc::vec::Vec;
 use std::any::Any;
+use std::println;
 pub(super) use server_hello::CompleteServerHelloHandling;
 
 mod server_hello {
@@ -630,7 +631,7 @@ impl State<ClientConnectionData> for ExpectCertificateRequest {
             HandshakePayload::CertificateRequest
         )?;
         self.transcript.add_message(&m);
-        debug!("Got CertificateRequest {:?}", certreq);
+        println!("Got CertificateRequest {:?}", certreq);
 
         // The RFC jovially describes the design here as 'somewhat complicated'
         // and 'somewhat underspecified'.  So thanks for that.
@@ -648,6 +649,7 @@ impl State<ClientConnectionData> for ExpectCertificateRequest {
             NO_CONTEXT,
         );
 
+        println!("done!");
         Ok(Box::new(ExpectServerDone {
             config: self.config,
             resuming_session: self.resuming_session,
