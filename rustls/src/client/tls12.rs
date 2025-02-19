@@ -554,6 +554,7 @@ struct ExpectServerDoneOrCertReq {
 
 impl State<ClientConnectionData> for ExpectServerDoneOrCertReq {
     fn handle(mut self: Box<Self>, cx: &mut ClientContext<'_>, m: Message) -> hs::NextStateOrError {
+        println!("ExpectServerDoneOrCertReq1");
         if matches!(
             m.payload,
             MessagePayload::Handshake {
@@ -564,6 +565,8 @@ impl State<ClientConnectionData> for ExpectServerDoneOrCertReq {
                 ..
             }
         ) {
+            println!("ExpectServerDoneOrCertReq2");
+
             Box::new(ExpectCertificateRequest {
                 config: self.config,
                 resuming_session: self.resuming_session,
@@ -579,7 +582,11 @@ impl State<ClientConnectionData> for ExpectServerDoneOrCertReq {
             })
             .handle(cx, m)
         } else {
+            println!("ExpectServerDoneOrCertReq3");
+
             self.transcript.abandon_client_auth();
+
+            println!("ExpectServerDoneOrCertReq4");
 
             Box::new(ExpectServerDone {
                 config: self.config,
@@ -689,6 +696,7 @@ struct ExpectServerDone {
 
 impl State<ClientConnectionData> for ExpectServerDone {
     fn handle(self: Box<Self>, cx: &mut ClientContext<'_>, m: Message) -> hs::NextStateOrError {
+        println!("ExpectServerDone1");
         match m.payload {
             MessagePayload::Handshake {
                 parsed:
@@ -706,14 +714,17 @@ impl State<ClientConnectionData> for ExpectServerDone {
                 ));
             }
         }
+        println!("ExpectServerDone2");
 
         let mut st = *self;
         st.transcript.add_message(&m);
 
         cx.common.check_aligned_handshake()?;
 
-        trace!("Server cert is {:?}", st.server_cert.cert_chain);
-        debug!("Server DNS name is {:?}", st.server_name);
+        println!("ExpectServerDone3");
+
+        println!("Server cert is {:?}", st.server_cert.cert_chain);
+        println!("Server DNS name is {:?}", st.server_name);
 
         let suite = st.suite;
 
@@ -730,11 +741,15 @@ impl State<ClientConnectionData> for ExpectServerDone {
         // 6. emit a Finished, our first encrypted message under the new keys.
 
         // 1.
+        println!("ExpectServerDone4");
+
         let (end_entity, intermediates) = st
             .server_cert
             .cert_chain
             .split_first()
             .ok_or(Error::NoCertificatesPresented)?;
+        println!("ExpectServerDone5");
+
         let cert_verified = st
             .config
             .verifier
@@ -749,6 +764,8 @@ impl State<ClientConnectionData> for ExpectServerDone {
                 cx.common
                     .send_cert_verify_error_alert(err)
             })?;
+
+        println!("ExpectServerDone6");
 
         // 3.
         // Build up the contents of the signed message.
@@ -771,6 +788,8 @@ impl State<ClientConnectionData> for ExpectServerDone {
                 return Err(PeerMisbehaved::SignedKxWithWrongAlgorithm.into());
             }
 
+            println!("ExpectServerDone7");
+
             st.config
                 .verifier
                 .verify_tls12_signature(&message, &st.server_cert.cert_chain[0], sig)
@@ -781,6 +800,8 @@ impl State<ClientConnectionData> for ExpectServerDone {
         };
         cx.common.peer_certificates = Some(st.server_cert.cert_chain);
 
+        println!("ExpectServerDone8");
+
         // 4.
         if let Some(client_auth) = &st.client_auth {
             let certs = match client_auth {
@@ -789,6 +810,8 @@ impl State<ClientConnectionData> for ExpectServerDone {
             };
             emit_certificate(&mut st.transcript, certs, cx.common);
         }
+
+        println!("ExpectServerDone9");
 
         // 5a.
         let ecdh_params =
@@ -812,6 +835,8 @@ impl State<ClientConnectionData> for ExpectServerDone {
             .using_ems
             .then(|| transcript.get_current_hash());
 
+        println!("ExpectServerDone10");
+
         // 5c.
         if let Some(ClientAuthDetails::Verify { signer, .. }) = &st.client_auth {
             emit_certverify(&mut transcript, signer.as_ref(), cx.common)?;
@@ -829,6 +854,8 @@ impl State<ClientConnectionData> for ExpectServerDone {
             suite,
         )?;
 
+        println!("ExpectServerDone11");
+
         st.config.key_log.log(
             "CLIENT_RANDOM",
             &secrets.randoms.client,
@@ -843,7 +870,11 @@ impl State<ClientConnectionData> for ExpectServerDone {
         // 6.
         emit_finished(&secrets, &mut transcript, cx.common);
 
+        println!("ExpectServerDone12");
+
         if st.must_issue_new_ticket {
+            println!("ExpectServerDone13");
+
             Ok(Box::new(ExpectNewTicket {
                 config: st.config,
                 secrets,
@@ -857,6 +888,8 @@ impl State<ClientConnectionData> for ExpectServerDone {
                 sig_verified,
             }))
         } else {
+            println!("ExpectServerDone14");
+
             Ok(Box::new(ExpectCcs {
                 config: st.config,
                 secrets,

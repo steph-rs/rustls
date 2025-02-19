@@ -183,6 +183,7 @@ impl CommonState {
             }
             Err(e @ Error::InappropriateMessage { .. })
             | Err(e @ Error::InappropriateHandshakeMessage { .. }) => {
+                println!("process_main_protocol4");
                 Err(self.send_fatal_alert(AlertDescription::UnexpectedMessage, e))
             }
             Err(e) => Err(e),
