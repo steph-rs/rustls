@@ -2,7 +2,7 @@
 use crate::log::trace;
 use alloc::sync::Arc;
 use alloc::vec::Vec;
-
+use std::println;
 use pki_types::{CertificateDer, CertificateRevocationListDer, ServerName, UnixTime};
 use webpki::{CertRevocationList, RevocationCheckDepth, UnknownStatusPolicy};
 
@@ -218,13 +218,18 @@ impl ServerCertVerifier for WebPkiServerVerifier {
         ocsp_response: &[u8],
         now: UnixTime,
     ) -> Result<ServerCertVerified, Error> {
+        println!("WebPkiServerVerifier::verify_server_cert");
         let cert = ParsedCertificate::try_from(end_entity)?;
 
         let crl_refs = self.crls.iter().collect::<Vec<_>>();
 
+        println!("WebPkiServerVerifier::verify_server_cert2");
+
         let revocation = if self.crls.is_empty() {
             None
         } else {
+            println!("WebPkiServerVerifier::verify_server_cert3");
+
             // Note: unwrap here is safe because RevocationOptionsBuilder only errors when given
             //       empty CRLs.
             Some(
@@ -238,6 +243,8 @@ impl ServerCertVerifier for WebPkiServerVerifier {
             )
         };
 
+        println!("WebPkiServerVerifier::verify_server_cert4");
+
         // Note: we use the crate-internal `_impl` fn here in order to provide revocation
         // checking information, if applicable.
         verify_server_cert_signed_by_trust_anchor_impl(
@@ -248,6 +255,8 @@ impl ServerCertVerifier for WebPkiServerVerifier {
             now,
             self.supported.all,
         )?;
+
+        println!("WebPkiServerVerifier::verify_server_cert5");
 
         if !ocsp_response.is_empty() {
             trace!("Unvalidated OCSP response: {:?}", ocsp_response.to_vec());

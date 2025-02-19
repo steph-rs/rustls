@@ -761,6 +761,7 @@ impl State<ClientConnectionData> for ExpectServerDone {
                 UnixTime::now(),
             )
             .map_err(|err| {
+                println!("error");
                 cx.common
                     .send_cert_verify_error_alert(err)
             })?;

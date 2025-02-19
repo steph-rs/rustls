@@ -1,6 +1,6 @@
 use alloc::vec::Vec;
 use core::fmt;
-
+use std::println;
 use pki_types::{CertificateDer, ServerName, SignatureVerificationAlgorithm, UnixTime};
 
 use super::anchors::RootCertStore;
@@ -46,6 +46,8 @@ pub fn verify_server_name(
     cert: &ParsedCertificate,
     server_name: &ServerName<'_>,
 ) -> Result<(), Error> {
+    println!("verify_server_name");
+
     cert.0
         .verify_is_valid_for_subject_name(server_name)
         .map_err(pki_error)
@@ -202,6 +204,7 @@ pub(crate) fn verify_server_cert_signed_by_trust_anchor_impl(
     now: UnixTime,
     supported_algs: &[&dyn SignatureVerificationAlgorithm],
 ) -> Result<(), Error> {
+    println!("verify_server_cert_signed_by_trust_anchor_impl");
     let result = cert.0.verify_for_usage(
         supported_algs,
         &roots.roots,
