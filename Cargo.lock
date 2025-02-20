@@ -1734,7 +1734,7 @@ dependencies = [
  "ring 0.17.6",
  "rustls-pemfile 2.0.0",
  "rustls-pki-types",
- "rustls-webpki 0.102.1",
+ "rustls-webpki 0.102.1 (git+https://github.com/steph-rs/webpki?rev=758ca1ec884afc29173ca0bee7041b81bb5ced4d)",
  "rustversion",
  "subtle",
  "webpki-roots 0.26.0",
@@ -1829,7 +1829,7 @@ dependencies = [
  "rsa",
  "rustls 0.22.4",
  "rustls-pki-types",
- "rustls-webpki 0.102.1",
+ "rustls-webpki 0.102.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde",
  "serde_json",
  "sha2",
@@ -1853,6 +1853,16 @@ name = "rustls-webpki"
 version = "0.102.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ef4ca26037c909dedb327b48c3327d0ba91d3dd3c4e05dad328f210ffb68e95b"
+dependencies = [
+ "ring 0.17.6",
+ "rustls-pki-types",
+ "untrusted 0.9.0",
+]
+
+[[package]]
+name = "rustls-webpki"
+version = "0.102.1"
+source = "git+https://github.com/steph-rs/webpki?rev=758ca1ec884afc29173ca0bee7041b81bb5ced4d#758ca1ec884afc29173ca0bee7041b81bb5ced4d"
 dependencies = [
  "aws-lc-rs",
  "ring 0.17.6",
