@@ -205,12 +205,15 @@ pub(crate) fn verify_server_cert_signed_by_trust_anchor_impl(
     supported_algs: &[&dyn SignatureVerificationAlgorithm],
 ) -> Result<(), Error> {
     println!("verify_server_cert_signed_by_trust_anchor_impl");
+    let key_usage = webpki::KeyUsage::server_auth();
+    println!("verify_server_cert_signed_by_trust_anchor_impl1");
+
     let result = cert.0.verify_for_usage(
         supported_algs,
         &roots.roots,
         intermediates,
         now,
-        webpki::KeyUsage::server_auth(),
+        key_usage,
         revocation,
         None,
     );
