@@ -20,7 +20,7 @@ aws-lc-rs = { version = "1.5", optional = true }
 log = { version = "0.4.4", optional = true }
 ring = { git = "https://github.com/automata-network/ring-sgx", optional = true }
 subtle = { version = "2.5.0", default-features = false }
-webpki = { package = "rustls-webpki", git = "https://github.com/steph-rs/webpki", rev = "8d4bfaf6d1a546f81156caafffebb7127d8524b8" }
+webpki = { package = "rustls-webpki", git = "https://github.com/steph-rs/webpki", rev = "3c59dfaca32a3913b03aae7f8ac38ad4849cfa2d" }
 pki-types = { package = "rustls-pki-types", version = "1", features = ["std"] }
 zeroize = "1.6.0"
 
