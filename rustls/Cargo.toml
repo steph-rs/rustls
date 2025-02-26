@@ -18,7 +18,7 @@ rustversion = { version = "1.0.6", optional = true }
 [dependencies]
 aws-lc-rs = { version = "1.5", optional = true }
 log = { version = "0.4.4", optional = true }
-ring = { version = "0.17", optional = true }
+ring = { git = "https://github.com/automata-network/ring-sgx", optional = true }
 subtle = { version = "2.5.0", default-features = false }
 webpki = { package = "rustls-webpki", git = "https://github.com/steph-rs/webpki", rev = "8d4bfaf6d1a546f81156caafffebb7127d8524b8" }
 pki-types = { package = "rustls-pki-types", version = "1", features = ["std"] }
